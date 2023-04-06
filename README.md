@@ -3,10 +3,8 @@
 
 ### Overview
 
-The <strong>re-frame-utils</strong> library contains the whole functionality
-of the great Re-Frame Clojure/ClojureScript framework with some extra features
-such as metamorphic-events (which allows you to register and dispatch your events
-in a freestyle way).
+The <strong>re-frame-utils</strong> library is a set of data functions made for
+the Re-Frame Clojure/ClojureScript framework.
 
 ### deps.edn
 
