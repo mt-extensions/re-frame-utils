@@ -1,11 +1,15 @@
 
 (ns re-frame.db.api
-    (:require [re-frame.db.events  :as events]
-              [re-frame.db.helpers :as helpers]
-              [re-frame.db.subs    :as subs]))
+    (:require [re-frame.db.env    :as env]
+              [re-frame.db.events :as events]
+              [re-frame.db.subs   :as subs]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
+
+; re-frame.db.env
+(def subscribe-item  env/subscribe-item)
+(def subscribed-item env/subscribed-item)
 
 ; re-frame.db.events
 (def empty-db!           events/empty-db!)
@@ -21,10 +25,6 @@
 (def inc-item-n!         events/inc-item-n!)
 (def dec-item-n!         events/dec-item-n!)
 (def apply-item!         events/apply-item!)
-
-; re-frame.db.helpers
-(def subscribe-item  helpers/subscribe-item)
-(def subscribed-item helpers/subscribed-item)
 
 ; re-frame.db.subs
 (def get-db           subs/get-db)

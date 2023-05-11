@@ -1,5 +1,5 @@
 
-(ns re-frame.db.helpers
+(ns re-frame.db.env
     (:require [re-frame.core :refer [subscribe]]))
 
 ;; ----------------------------------------------------------------------------
