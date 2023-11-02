@@ -1,7 +1,6 @@
 
 (ns re-frame.db.subs
-    (:require [noop.api      :refer [return]]
-              [re-frame.core :refer [reg-sub]]))
+    (:require [re-frame.core :refer [reg-sub]]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -9,7 +8,7 @@
 (defn get-db
   ; @return (map)
   [db _]
-  (return db))
+  (-> db))
 
 (defn get-item
   ; @param (vector) item-path

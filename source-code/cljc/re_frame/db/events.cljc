@@ -1,7 +1,6 @@
 
 (ns re-frame.db.events
     (:require [map.api       :refer [dissoc-in]]
-              [noop.api      :refer [return]]
               [re-frame.core :refer [reg-event-db]]
               [vector.api    :as vector]))
 
@@ -11,7 +10,7 @@
 (defn empty-db!
   ; @return (map)
   [_ _]
-  (return {}))
+  (-> {}))
 
 (defn toggle-item!
   ; @param (vector) item-path
