@@ -190,7 +190,7 @@
 ```
 (defn empty-db!
   [_ _]
-  (return {}))
+  (-> {}))
 ```
 
 </details>
@@ -270,7 +270,7 @@
 ```
 (defn get-db
   [db _]
-  (return db))
+  (-> db))
 ```
 
 </details>
