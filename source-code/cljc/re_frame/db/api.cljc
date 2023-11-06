@@ -20,9 +20,11 @@
 (def set-item!           events/set-item!)
 (def set-vector-item!    events/set-vector-item!)
 (def remove-item!        events/remove-item!)
-(def remove-vector-item! events/remove-vector-item!)
 (def remove-item-n!      events/remove-item-n!)
+(def remove-vector-item! events/remove-vector-item!)
+(def inc-item!           events/inc-item!)
 (def inc-item-n!         events/inc-item-n!)
+(def dec-item!           events/dec-item!)
 (def dec-item-n!         events/dec-item-n!)
 (def apply-item!         events/apply-item!)
 

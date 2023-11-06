@@ -6,6 +6,18 @@
 ;; ----------------------------------------------------------------------------
 
 (defn get-db
+  ; @description
+  ; Returns the db.
+  ;
+  ; @usage
+  ; (r get-db db)
+  ;
+  ; @example
+  ; (def db {:my-item :my-value})
+  ; (r get-db db)
+  ; =>
+  ; {:my-item :my-value}
+  ;
   ; @return (map)
   [db _]
   (-> db))
@@ -15,10 +27,16 @@
   ; @param (*)(opt) default-value
   ;
   ; @usage
-  ; (r get-item [:my-item])
+  ; (r get-item db [:my-item])
   ;
   ; @usage
-  ; (r get-item [:my-item] "Default value")
+  ; (r get-item db [:my-item] "Default value")
+  ;
+  ; @example
+  ; (def db {:my-item :my-value})
+  ; (r get-item db [:my-item])
+  ; =>
+  ; :my-value
   ;
   ; @return (*)
   [db [_ item-path default-value]]
@@ -28,7 +46,13 @@
   ; @param (vector) item-path
   ;
   ; @usage
-  ; (r item-exists? [:my-item])
+  ; (r item-exists? db [:my-item])
+  ;
+  ; @example
+  ; (def db {:my-item :my-value})
+  ; (r item-exists? db [:my-item])
+  ; =>
+  ; true
   ;
   ; @return (boolean)
   [db [_ item-path]]
@@ -38,7 +62,19 @@
   ; @param (vector) item-path
   ;
   ; @usage
-  ; (r get-item-count [:my-item])
+  ; (r get-item-count db [:my-item])
+  ;
+  ; @example
+  ; (def db {:my-item [:a :b :c]})
+  ; (r get-item-count db [:my-item])
+  ; =>
+  ; 3
+  ;
+  ; @example
+  ; (def db {:my-item "My string"})
+  ; (r get-item-count db [:my-item])
+  ; =>
+  ; 9
   ;
   ; @return (integer)
   [db [_ item-path]]
@@ -51,10 +87,16 @@
   ; @param (list of *) params
   ;
   ; @usage
-  ; (r get-applied-item [:my-item] inc)
+  ; (r get-applied-item db [:my-item] inc)
   ;
   ; @usage
-  ; (r get-applied-item [:my-item] + 42)
+  ; (r get-applied-item db [:my-item] + 42)
+  ;
+  ; @example
+  ; (def db {:my-item 42})
+  ; (r get-applied-item db [:my-item] inc)
+  ; =>
+  ; 43
   ;
   ; @return (integer)
   [db [_ item-path f & params]]

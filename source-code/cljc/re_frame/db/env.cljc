@@ -21,7 +21,7 @@
 
 (defn subscribed-item
   ; @description
-  ; Returns the actual derefed value of a db item.
+  ; Returns the actual deref'ed value of a db item.
   ;
   ; @param (vector) item-path
   ; @param (*)(opt) default-value
