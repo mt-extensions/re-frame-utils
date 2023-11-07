@@ -92,7 +92,7 @@ Returns TRUE if a registered event handler is found by the given 'event-kind' an
 (defn get-db-reset-count
   [db _]
   (swap! state/DB-RESET-COUNT inc)
-  (->   @state/DB-RESET-COUNT))
+  (-> @state/DB-RESET-COUNT))
 ```
 
 </details>
