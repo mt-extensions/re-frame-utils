@@ -26,7 +26,7 @@
 
 (defn toggle-item!
   ; @description
-  ; Converts a value (stored on the given 'item-path') to boolean and toggles it (true > false, false > true).
+  ; Converts a value (stored on the given 'item-path') into a boolean and toggles it (true > false, false > true).
   ;
   ; @param (vector) item-path
   ;
@@ -153,7 +153,7 @@
   ;
   ; @description
   ; - Writes the given 'item' to the given 'item-path' (that can be a vector) to a specific index.
-  ; - If the parent item ('item-path') is not a vector this function converts it to a vector with one item ('item').
+  ; - If the parent item ('item-path') is not a vector this function converts it into a vector that contains the given 'item'.
   ;
   ; @param (vector) item-path
   ; @param (*) item
