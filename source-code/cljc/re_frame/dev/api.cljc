@@ -3,8 +3,8 @@
     (:require [re-frame.dev.env          :as env]
               [re-frame.dev.interceptors :as interceptors]
               [re-frame.dev.side-effects :as side-effects]
-              [re-frame.dev.subs         :as subs]
-              [re-frame.dev.state        :as state]))
+              [re-frame.dev.state        :as state]
+              [re-frame.dev.subs         :as subs]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
