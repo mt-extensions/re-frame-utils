@@ -238,8 +238,8 @@
   ;
   ; @return (map)
   [db [_ & item-paths]]
-  (letfn [(f [db item-path] (dissoc-in db item-path))]
-         (reduce f db item-paths)))
+  (letfn [(f0 [db item-path] (dissoc-in db item-path))]
+         (reduce f0 db item-paths)))
 
 (defn remove-vector-item!
   ; @warning
@@ -303,8 +303,8 @@
   ;
   ; @return (map)
   [db [_ & item-paths]]
-  (letfn [(f [db item-path] (update-in db item-path inc))]
-         (reduce f db item-paths)))
+  (letfn [(f0 [db item-path] (update-in db item-path inc))]
+         (reduce f0 db item-paths)))
 
 (defn dec-item!
   ; @description
@@ -341,8 +341,8 @@
   ;
   ; @return (map)
   [db [_ & item-paths]]
-  (letfn [(f [db item-path] (update-in db item-path dec))]
-         (reduce f db item-paths)))
+  (letfn [(f0 [db item-path] (update-in db item-path dec))]
+         (reduce f0 db item-paths)))
 
 (defn apply-item!
   ; @description
