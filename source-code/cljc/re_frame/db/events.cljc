@@ -1,8 +1,8 @@
 
 (ns re-frame.db.events
-    (:require [map.api       :refer [dissoc-in]]
-              [re-frame.core :refer [reg-event-db]]
-              [vector.api    :as vector]))
+    (:require [fruits.map.api    :refer [dissoc-in]]
+              [fruits.vector.api :as vector]
+              [re-frame.core     :refer [reg-event-db]]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
