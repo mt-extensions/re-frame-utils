@@ -148,8 +148,8 @@
            (dissoc-in db item-path)))
 
 (defn set-vector-item!
-  ; @warning
-  ; Last item in the given 'item-path' vector must be integer!
+  ; @important
+  ; The last item in the given 'item-path' vector must be an integer!
   ;
   ; @description
   ; - Writes the given 'item' to the given 'item-path' (that can be a vector) to a specific index.
@@ -242,8 +242,8 @@
          (reduce f0 db item-paths)))
 
 (defn remove-vector-item!
-  ; @warning
-  ; Last item in the given 'item-path' vector must be integer!
+  ; @important
+  ; The last item in the given 'item-path' vector must be an integer!
   ;
   ; @description
   ; Removes the item from the given 'item-path' that must be a vector and the item path must contain the item's index.
