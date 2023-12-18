@@ -10,7 +10,7 @@ and a set of developer tools for the Re-Frame Clojure/ClojureScript framework.
 
 ```
 {:deps {bithandshake/re-frame-utils {:git/url "https://github.com/bithandshake/re-frame-utils"
-                                     :sha     "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"}}
+                                     :sha     "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"}}}
 ```
 
 ### Current version

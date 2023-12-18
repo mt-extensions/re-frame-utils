@@ -26,7 +26,7 @@
 
 (defn toggle-item!
   ; @description
-  ; Converts a value (stored on the given 'item-path') into a boolean and toggles it (true > false, false > true).
+  ; Converts a value (stored at the given 'item-path') into a boolean and toggles it (true > false, false > true).
   ;
   ; @param (vector) item-path
   ;
@@ -51,7 +51,7 @@
 
 (defn toggle-item-value!
   ; @description
-  ; - If the value stored on the given 'item-path' equals to the given 'item-value' dissociates otherwise associates it.
+  ; - If the value stored at the given 'item-path' equals to the given 'item-value', dissociates it, otherwise associates it.
   ; - E.g., if the '[:my-item]' path contains "My string" and the given 'item-value' is also "My string"
   ;   it overwrites the '[:my-item]' path with NIL, otherwise it writes the "My string" value to the '[:my-item]' path.
   ;
@@ -82,7 +82,7 @@
 
 (defn copy-item!
   ; @description
-  ; Duplicates the item found on the given 'item-path' to the 'copy-path'.
+  ; Duplicates the item at the given 'item-path' to the 'copy-path'.
   ;
   ; @param (vector) item-path
   ; @param (vector) copy-path
@@ -105,7 +105,7 @@
 
 (defn move-item!
   ; @description
-  ; Moves the item found on the given 'item-path' to the 'destination-path'.
+  ; Moves the item at the given 'item-path' to the 'destination-path'.
   ;
   ; @param (vector) item-path
   ; @param (vector) destination-path
@@ -269,7 +269,7 @@
 
 (defn inc-item!
   ; @description
-  ; Increases the value found on the given 'item-path' by one.
+  ; Increases the value at the given 'item-path' by one.
   ;
   ; @param (vector) item-path
   ;
@@ -288,7 +288,7 @@
 
 (defn inc-item-n!
   ; @description
-  ; Increases the values found on the given 'item-paths' by one.
+  ; Increases the values at the given 'item-paths' by one.
   ;
   ; @param (vectors in vector) item-paths
   ;
@@ -308,7 +308,7 @@
 
 (defn dec-item!
   ; @description
-  ; Decreases the value found on the given 'item-path' by one.
+  ; Decreases the value at the given 'item-path' by one.
   ;
   ; @param (vector) item-path
   ;
@@ -326,7 +326,7 @@
 
 (defn dec-item-n!
   ; @description
-  ; Decreases the values found on the given 'item-paths' by one.
+  ; Decreases the values at the given 'item-paths' by one.
   ;
   ; @param (vectors in vector) item-paths
   ;
