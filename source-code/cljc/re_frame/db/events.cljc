@@ -51,9 +51,9 @@
 
 (defn toggle-item-value!
   ; @description
-  ; - If the value stored at the given 'item-path' equals to the given 'item-value', dissociates it, otherwise associates it.
+  ; - If the value stored at the given 'item-path' equals to the given 'item-value', dissociates it; otherwise, associates it.
   ; - E.g., if the '[:my-item]' path contains "My string" and the given 'item-value' is also "My string"
-  ;   it overwrites the '[:my-item]' path with NIL, otherwise it writes the "My string" value to the '[:my-item]' path.
+  ;   it overwrites the '[:my-item]' path with NIL; otherwise, it writes the "My string" value to the '[:my-item]' path.
   ;
   ; @param (vector) item-path
   ; @param (*) item-value
@@ -228,11 +228,11 @@
   ; @param (vectors in vector) item-paths
   ;
   ; @usage
-  ; (r remove-item-n! db [[:my-item] [:your-item]])
+  ; (r remove-item-n! db [[:my-item] [:another-item]])
   ;
   ; @example
-  ; (def db {:my-item :my-value :your-item :your-value})
-  ; (r remove-item-n! db [[:my-item] [:your-item]])
+  ; (def db {:my-item :my-value :another-item :another-value})
+  ; (r remove-item-n! db [[:my-item] [:another-item]])
   ; =>
   ; {}
   ;
@@ -293,13 +293,13 @@
   ; @param (vectors in vector) item-paths
   ;
   ; @usage
-  ; (r inc-item-n! db [[:my-item] [:your-item]])
+  ; (r inc-item-n! db [[:my-item] [:another-item]])
   ;
   ; @example
-  ; (def db {:my-item 42 :your-item 69})
-  ; (r inc-item-n! db [[:my-item] [:your-item]])
+  ; (def db {:my-item 42 :another-item 69})
+  ; (r inc-item-n! db [[:my-item] [:another-item]])
   ; =>
-  ; {:my-item 43 :your-item 70}
+  ; {:my-item 43 :another-item 70}
   ;
   ; @return (map)
   [db [_ & item-paths]]
@@ -331,13 +331,13 @@
   ; @param (vectors in vector) item-paths
   ;
   ; @usage
-  ; (r dec-item-n! db [[:my-item] [:your-item]])
+  ; (r dec-item-n! db [[:my-item] [:another-item]])
   ;
   ; @example
-  ; (def db {:my-item 42 :your-item 69})
-  ; (r dec-item-n! db [[:my-item] [:your-item]])
+  ; (def db {:my-item 42 :another-item 69})
+  ; (r dec-item-n! db [[:my-item] [:another-item]])
   ; =>
-  ; {:my-item 41 :your-item 68}
+  ; {:my-item 41 :another-item 68}
   ;
   ; @return (map)
   [db [_ & item-paths]]
@@ -409,7 +409,7 @@
 (reg-event-db :remove-item! remove-item!)
 
 ; @usage
-; [:remove-item-n! [[:my-item ] [:your-item]]]
+; [:remove-item-n! [[:my-item ] [:another-item]]]
 (reg-event-db :remove-item-n! remove-item-n!)
 
 ; @usage
@@ -421,7 +421,7 @@
 (reg-event-db :inc-item! inc-item!)
 
 ; @usage
-; [:inc-item-n! [[:my-item] [:your-item]]]
+; [:inc-item-n! [[:my-item] [:another-item]]]
 (reg-event-db :inc-item-n! inc-item-n!)
 
 ; @usage
@@ -429,7 +429,7 @@
 (reg-event-db :dec-item! dec-item!)
 
 ; @usage
-; [:dec-item-n! [[:my-item] [:your-item]]]
+; [:dec-item-n! [[:my-item] [:another-item]]]
 (reg-event-db :dec-item-n! dec-item-n!)
 
 ; @usage
