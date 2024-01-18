@@ -7,14 +7,22 @@
 ;; ----------------------------------------------------------------------------
 
 (defn get-db-reset-count
+  ; @note
+  ; Only counts the db writes when this handler is subscribed!
+  ;
   ; @description
-  ; - Returns the actual Re-Frame DB write count.
-  ; - It only counts the DB writes when this function is subscribed!
+  ; Returns the actual db write count.
+  ;
+  ; @usage
+  ; (get-db-reset-count db [:my-handler])
+  ;
+  ; @usage
+  ; (subscribe [:get-db-reset-count])
   ;
   ; @return (integer)
   [db _]
-  (swap! state/DB-RESET-COUNT inc)
-  (-> @state/DB-RESET-COUNT))
+  (-> state/DB-RESET-COUNT (swap! inc))
+  (-> state/DB-RESET-COUNT (deref)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

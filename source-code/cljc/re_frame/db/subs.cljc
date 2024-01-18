@@ -9,100 +9,129 @@
   ; @description
   ; Returns the db.
   ;
-  ; @usage
-  ; (r get-db db)
+  ; @param (map) db
+  ; @param (vector) handler-vector
+  ; [(keyword) handler-id]
   ;
-  ; @example
-  ; (def db {:my-item :my-value})
-  ; (r get-db db)
+  ; @usage
+  ; (def db {:my-item "My value"})
+  ; (get-db db [:my-handler])
   ; =>
-  ; {:my-item :my-value}
+  ; {:my-item "My value"}
+  ;
+  ; @usage
+  ; (subscribe [:get-db])
   ;
   ; @return (map)
   [db _]
   (-> db))
 
 (defn get-item
-  ; @param (vector) item-path
-  ; @param (*)(opt) default-value
+  ; @description
+  ; Returns a specific item from the db.
+  ;
+  ; @param (map) db
+  ; @param (vector) handler-vector
+  ; [(keyword) handler-id
+  ;  (vector) item-path
+  ;  (*)(opt) default-value]
   ;
   ; @usage
-  ; (r get-item db [:my-item])
-  ;
-  ; @usage
-  ; (r get-item db [:my-item] "Default value")
-  ;
-  ; @example
-  ; (def db {:my-item :my-value})
-  ; (r get-item db [:my-item])
+  ; (def db {:my-item "My value"})
+  ; (get-item db [:my-handler [:my-item]])
   ; =>
-  ; :my-value
+  ; "My value"
+  ;
+  ; @usage
+  ; (def db {})
+  ; (get-item db [:my-handler [:my-item] "My default value"])
+  ; =>
+  ; "My default value"
+  ;
+  ; @usage
+  ; (subscribe [:get-item [:my-item]])
   ;
   ; @return (*)
   [db [_ item-path default-value]]
   (get-in db item-path default-value))
 
 (defn item-exists?
-  ; @param (vector) item-path
+  ; @description
+  ; Returns TRUE if a specific item exists in the db.
+  ;
+  ; @param (map) db
+  ; @param (vector) handler-vector
+  ; [(keyword) handler-id
+  ;  (vector) item-path]
   ;
   ; @usage
-  ; (r item-exists? db [:my-item])
-  ;
-  ; @example
-  ; (def db {:my-item :my-value})
-  ; (r item-exists? db [:my-item])
+  ; (def db {:my-item "My value"})
+  ; (item-exists? db [:my-handler [:my-item]])
   ; =>
   ; true
   ;
+  ; @usage
+  ; (subscribe [:item-exists? [:my-item]])
+  ;
   ; @return (boolean)
   [db [_ item-path]]
-  (some? (get-in db item-path)))
+  (let [item-value (get-in db item-path)]
+       (some? item-value)))
 
 (defn get-item-count
-  ; @param (vector) item-path
+  ; @description
+  ; Returns the number of items of a specific item in the db.
+  ;
+  ; @param (map) db
+  ; @param (vector) handler-vector
+  ; [(keyword) handler-id
+  ;  (vector) item-path]
   ;
   ; @usage
-  ; (r get-item-count db [:my-item])
-  ;
-  ; @example
   ; (def db {:my-item [:a :b :c]})
-  ; (r get-item-count db [:my-item])
+  ; (get-item-count db [:my-handler [:my-item]])
   ; =>
   ; 3
   ;
-  ; @example
-  ; (def db {:my-item "My string"})
-  ; (r get-item-count db [:my-item])
+  ; @usage
+  ; (def db {:my-item "My value"})
+  ; (get-item-count db [:my-handler [:my-item]])
   ; =>
-  ; 9
+  ; 8
+  ;
+  ; @usage
+  ; (subscribe [:get-item-count [:my-item]])
   ;
   ; @return (integer)
   [db [_ item-path]]
-  (let [item (get-in db item-path)]
-       (count item)))
+  (let [item-value (get-in db item-path)]
+       (if (-> item-value seqable?)
+           (-> item-value count))))
 
-(defn get-applied-item
-  ; @param (vector) item-path
-  ; @param (function) f
-  ; @param (list of *) params
+(defn get-updated-item
+  ; @description
+  ; Returns a specific item from the db updated with the given 'f' function.
+  ;
+  ; @param (map) db
+  ; @param (vector) handler-vector
+  ; [(keyword) handler-id
+  ;  (vector) item-path
+  ;  (function) f
+  ;  (list of *)(opt) params]
   ;
   ; @usage
-  ; (r get-applied-item db [:my-item] inc)
-  ;
-  ; @usage
-  ; (r get-applied-item db [:my-item] + 42)
-  ;
-  ; @example
   ; (def db {:my-item 42})
-  ; (r get-applied-item db [:my-item] inc)
+  ; (get-updated-item db [:my-handler [:my-item] inc])
   ; =>
   ; 43
   ;
+  ; @usage
+  ; (subscribe [:get-updated-item [:my-item] inc])
+  ;
   ; @return (integer)
   [db [_ item-path f & params]]
-  (let [item   (get-in db item-path)
-        params (cons item params)]
-       (apply f params)))
+  (let [item-value (get-in db item-path)]
+       (apply f item-value params)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -111,21 +140,28 @@
 ; [:get-db]
 (reg-sub :get-db get-db)
 
+; @param (vector) item-path
+;
 ; @usage
 ; [:get-item [:my-item]]
 (reg-sub :get-item get-item)
 
+; @param (vector) item-path
+;
 ; @usage
 ; [:item-exists? [:my-item]]
 (reg-sub :item-exists? item-exists?)
 
+; @param (vector) item-path
+;
 ; @usage
 ; [:get-item-count [:my-item]]
 (reg-sub :get-item-count get-item-count)
 
-; @usage
-; [:get-applied-item [:my-item] inc]
+; @param (vector) item-path
+; @param (function) f
+; @param (list of *)(opt) params
 ;
 ; @usage
-; [:get-applied-item [:my-item] + 42]
-(reg-sub :get-applied-item get-applied-item)
+; [:get-updated-item [:my-item] inc]
+(reg-sub :get-updated-item get-updated-item)

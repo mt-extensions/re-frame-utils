@@ -14,22 +14,16 @@
   ;
   ; @usage
   ; (get-event-handlers)
+  ; =>
+  ; {:cofx  {:my-cofx-handler  (fn [_ _] ...)}
+  ;  :event {:my-event-handler (fn [_ _] ...)}
+  ;  :fx    {:my-fx-handler    (fn [_ _] ...)}
+  ;  :sub   {:my-sub-handler   (fn [_ _] ...)}}
   ;
   ; @usage
   ; (get-event-handlers :sub)
-  ;
-  ; @example
-  ; (get-event-handlers)
   ; =>
-  ; {:cofx  {...}
-  ;  :event {...}
-  ;  :fx    {...}
-  ;  :sub   {...}}
-  ;
-  ; @example
-  ; (get-event-handlers :sub)
-  ; =>
-  ; {...}
+  ; {:my-sub-handler (fn [_ _] ...)}
   ;
   ; @return (map)
   ; {:cofx (map)
@@ -49,8 +43,10 @@
   ;
   ; @usage
   ; (get-event-handler :sub :my-subscription)
+  ; =>
+  ; (fn [_ _] ...)
   ;
-  ; @return (maps in list)
+  ; @return (function)
   [event-kind event-id]
   (-> (get-event-handlers)
       (get-in [event-kind event-id])))
@@ -65,6 +61,8 @@
   ;
   ; @usage
   ; (event-handler-registered? :sub :my-subscription)
+  ; =>
+  ; true
   ;
   ; @return (function)
   [event-kind event-id]

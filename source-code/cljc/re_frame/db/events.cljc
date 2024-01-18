@@ -2,376 +2,282 @@
 (ns re-frame.db.events
     (:require [fruits.map.api    :refer [dissoc-in]]
               [fruits.vector.api :as vector]
-              [re-frame.core     :refer [reg-event-db]]))
+              [re-frame.core     :refer [reg-event-db]]
+              [re-frame.db.utils :as utils]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
 (defn empty-db!
   ; @description
-  ; Returns an empty map.
+  ; Returns the db as an empty map.
+  ;
+  ; @param (map) db
+  ; @param (vector) handler-vector
+  ; [(keyword) handler-id]
   ;
   ; @usage
-  ; (r empty-db! db)
-  ;
-  ; @example
-  ; (def db {:my-item :my-value})
-  ; (r empty-db! db)
+  ; (def db {:my-item "My value"})
+  ; (empty-db! db [:my-handler])
   ; =>
   ; {}
+  ;
+  ; @usage
+  ; (dispatch [:empty-db!])
   ;
   ; @return (map)
   [_ _]
   (-> {}))
 
-(defn toggle-item!
-  ; @description
-  ; Converts a value (stored at the given 'item-path') into a boolean and toggles it (true > false, false > true).
-  ;
-  ; @param (vector) item-path
-  ;
-  ; @usage
-  ; (r toggle-item! db [:my-item])
-  ;
-  ; @example
-  ; (def db {:my-item false})
-  ; (r toggle-item! db [:my-item])
-  ; =>
-  ; {:my-item true}
-  ;
-  ; @example
-  ; (def db {:my-item nil})
-  ; (r toggle-item! db [:my-item])
-  ; =>
-  ; {:my-item true}
-  ;
-  ; @return (map)
-  [db [_ item-path]]
-  (update-in db item-path not))
-
-(defn toggle-item-value!
-  ; @description
-  ; - If the value stored at the given 'item-path' equals to the given 'item-value', dissociates it; otherwise, associates it.
-  ; - E.g., if the '[:my-item]' path contains "My string" and the given 'item-value' is also "My string"
-  ;   it overwrites the '[:my-item]' path with NIL; otherwise, it writes the "My string" value to the '[:my-item]' path.
-  ;
-  ; @param (vector) item-path
-  ; @param (*) item-value
-  ;
-  ; @usage
-  ; (r toggle-item-value! db [:my-item] :my-value)
-  ;
-  ; @example
-  ; (def db {:my-item :my-value})
-  ; (r toggle-item-value! db [:my-item] :my-value)
-  ; =>
-  ; {}
-  ;
-  ; @example
-  ; (def db {:my-item :anything-else})
-  ; (r toggle-item-value! db [:my-item] :my-value)
-  ; =>
-  ; {:my-item :my-value}
-  ;
-  ; @return (map)
-  [db [_ item-path item-value]]
-  (let [stored-value (get-in db item-path)]
-       (if (= stored-value item-value)
-           (dissoc-in db item-path)
-           (assoc-in  db item-path item-value))))
-
-(defn copy-item!
-  ; @description
-  ; Duplicates the item at the given 'item-path' to the 'copy-path'.
-  ;
-  ; @param (vector) item-path
-  ; @param (vector) copy-path
-  ;
-  ; @usage
-  ; (r copy-item! db [:copy-from] [:copy-to])
-  ;
-  ; @example
-  ; (def db {:copy-from :my-value})
-  ; (r copy-item! db [:copy-from] [:copy-to])
-  ; =>
-  ; {:copy-from :my-value
-  ;  :copy-to   :my-value}
-  ;
-  ; @return (map)
-  [db [_ item-path copy-path]]
-  (if-let [item (get-in db item-path)]
-          (assoc-in  db copy-path item)
-          (dissoc-in db copy-path)))
-
-(defn move-item!
-  ; @description
-  ; Moves the item at the given 'item-path' to the 'destination-path'.
-  ;
-  ; @param (vector) item-path
-  ; @param (vector) destination-path
-  ;
-  ; @usage
-  ; (r move-item! db [:move-from] [:move-to])
-  ;
-  ; @example
-  ; (def db {:move-from :my-value})
-  ; (r move-item! db [:move-from] [:move-to])
-  ; =>
-  ; {:move-to :my-value}
-  ;
-  ; @return (map)
-  [db [_ item-path destination-path]]
-  (if-let [item (get-in db item-path)]
-          (-> db (assoc-in  destination-path item)
-                 (dissoc-in item-path))
-          (dissoc-in db destination-path)))
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
 
 (defn set-item!
   ; @description
-  ; Writes the given 'item' to the given 'item-path'.
+  ; Overwrites a specific item with the given value in the db.
   ;
-  ; @param (vector) item-path
-  ; @param (*) item
-  ;
-  ; @usage
-  ; (r set-item! db [:my-item] :my-value)
-  ;
-  ; @example
-  ; (def db {})
-  ; (r set-item! db [:my-item] :my-value)
-  ; =>
-  ; {:my-item :my-value}
-  ;
-  ; @return (map)
-  [db [_ item-path item]]
-  (if item (assoc-in  db item-path item)
-           (dissoc-in db item-path)))
-
-(defn set-vector-item!
-  ; @important
-  ; The last item in the given 'item-path' vector must be an integer!
-  ;
-  ; @description
-  ; - Writes the given 'item' to the given 'item-path' (that can be a vector) to a specific index.
-  ; - If the parent item ('item-path') is not a vector this function converts it into a vector that contains the given 'item'.
-  ;
-  ; @param (vector) item-path
-  ; @param (*) item
+  ; @param (map) db
+  ; @param (vector) handler-vector
+  ; [(keyword) handler-id
+  ;  (vector) item-path
+  ;  (*) item-value]
   ;
   ; @usage
-  ; (r set-vector-item! db [:my-item 0] :item-value)
-  ;
-  ; @example
   ; (def db {})
-  ; (r set-vector-item! db [:my-item 0] :item-value)
+  ; (set-item! db [:my-handler [:my-item] "My value"])
   ; =>
-  ; {:my-item [:item-value]}
+  ; {:my-item "My value"}
   ;
-  ; @example
+  ; @usage
+  ; (def db {:my-item "My value"})
+  ; (set-item! db [:my-handler [:my-item] nil])
+  ; =>
+  ; {}
+  ;
+  ; @usage
   ; (def db {})
-  ; (r set-vector-item! db [:my-item 2] :item-value)
+  ; (set-item! db [:my-handler [:my-item 0] "My value"])
   ; =>
-  ; {:my-item [:item-value]}
+  ; {:my-item ["My value"]}
   ;
-  ; @example
-  ; (def db {:my-item {}})
-  ; (r set-vector-item! db [:my-item 0] :item-value)
-  ; =>
-  ; {:my-item [:item-value]}
-  ;
-  ; @example
-  ; (def db {:my-item [])
-  ; (r set-vector-item! db [:my-item 0] :item-value)
-  ; =>
-  ; {:my-item [:item-value]}
-  ;
-  ; @example
-  ; (def db {:my-item [:first-value :second-value])
-  ; (r set-vector-item! db [:my-item 0] :item-value)
-  ; =>
-  ; {:my-item [:item-value :second-value]}
+  ; @usage
+  ; (dispatch [:set-item! [:my-item] "My value"])
   ;
   ; @return (map)
-  [db [_ item-path item]]
-  (let [item-parent-path (vector/remove-last-item item-path)
-        item-dex         (vector/last-item        item-path)
-        item-parent      (get-in db item-parent-path)]
-       (if (vector/nonempty? item-parent)
-           (let [updated-item-parent (vector/replace-nth-item item-parent item-dex item)]
-                (assoc-in db item-parent-path updated-item-parent))
-           (let [updated-item-parent [item]]
-                (assoc-in db item-parent-path updated-item-parent)))))
+  [db [_ item-path item-value]]
+  (if (utils/vector-item-path? item-path)
+      (let [parent-path (utils/parent-path     item-path)
+            item-dex    (utils/vector-item-dex item-path)]
+           (update-in db parent-path vector/upsert-nth-item item-dex item-value))
+      (if (-> item-value nil?)
+          (-> db (dissoc-in item-path))
+          (-> db (assoc-in  item-path item-value)))))
 
 (defn remove-item!
   ; @description
-  ; Removes the item from the given 'item-path'.
+  ; Removes a specific item from the db.
   ;
-  ; @param (vector) item-path
+  ; @param (map) db
+  ; @param (vector) handler-vector
+  ; [(keyword) handler-id
+  ;  (vector) item-path]
   ;
   ; @usage
-  ; (r remove-item! db [:my-item])
-  ;
-  ; @example
-  ; (def db {:my-item :my-value})
-  ; (r remove-item! db [:my-item])
+  ; (def db {:my-item "My value"})
+  ; (remove-item! db [:my-handler [:my-item]])
   ; =>
   ; {}
   ;
-  ; @return (map)
-  [db [_ item-path]]
-  (dissoc-in db item-path))
-
-(defn remove-item-n!
-  ; @description
-  ; Removes the items from the given 'item-paths'.
-  ;
-  ; @param (vectors in vector) item-paths
+  ; @usage
+  ; (def db {:my-item ["My value"]})
+  ; (remove-item! db [:my-handler [:my-item 0]])
+  ; =>
+  ; {:my-item []}
   ;
   ; @usage
-  ; (r remove-item-n! db [[:my-item] [:another-item]])
-  ;
-  ; @example
-  ; (def db {:my-item :my-value :another-item :another-value})
-  ; (r remove-item-n! db [[:my-item] [:another-item]])
-  ; =>
-  ; {}
-  ;
-  ; @return (map)
-  [db [_ & item-paths]]
-  (letfn [(f0 [db item-path] (dissoc-in db item-path))]
-         (reduce f0 db item-paths)))
-
-(defn remove-vector-item!
-  ; @important
-  ; The last item in the given 'item-path' vector must be an integer!
-  ;
-  ; @description
-  ; Removes the item from the given 'item-path' that must be a vector and the item path must contain the item's index.
-  ;
-  ; @param (vector) item-path
-  ;
-  ; @usage
-  ; (r remove-vector-item! db [:my-item 0])
-  ;
-  ; @example
-  ; (def db {:my-item [:a :b :c]})
-  ; (r remove-vector-item! db [:my-item 0])
-  ; =>
-  ; {:my-item [:b :c]}
+  ; (dispatch [:remove-item! [:my-item]])
   ;
   ; @return (map)
   [db [_ item-path]]
-  (let [parent-path         (vector/remove-last-item item-path)
-        item-dex            (vector/last-item        item-path)
-        parent-item         (get-in db parent-path)
-        updated-parent-item (vector/remove-nth-item parent-item item-dex)]
-       (assoc-in db parent-path updated-parent-item)))
+  (if (utils/vector-item-path? item-path)
+      (let [parent-path (utils/parent-path     item-path)
+            item-dex    (utils/vector-item-dex item-path)]
+           (update-in db parent-path vector/remove-nth-item item-dex))
+      (dissoc-in db item-path)))
 
-(defn inc-item!
+(defn update-item!
   ; @description
-  ; Increases the value at the given 'item-path' by one.
+  ; Applies the given 'f' function on a specific item in the db.
   ;
-  ; @param (vector) item-path
+  ; @param (map) db
+  ; @param (vector) handler-vector
+  ; [(keyword) handler-id
+  ;  (vector) item-path
+  ;  (function) f
+  ;  (list of *)(opt) params]
   ;
   ; @usage
-  ; (r inc-item! db [:my-item])
-  ;
-  ; @example
-  ; (def db {:my-item 42})
-  ; (r inc-item! db [:my-item])
-  ; =>
-  ; {:my-item 43}
-  ;
-  ; @return (map)
-  [db [_ item-path]]
-  (update-in db item-path inc))
-
-(defn inc-item-n!
-  ; @description
-  ; Increases the values at the given 'item-paths' by one.
-  ;
-  ; @param (vectors in vector) item-paths
-  ;
-  ; @usage
-  ; (r inc-item-n! db [[:my-item] [:another-item]])
-  ;
-  ; @example
-  ; (def db {:my-item 42 :another-item 69})
-  ; (r inc-item-n! db [[:my-item] [:another-item]])
-  ; =>
-  ; {:my-item 43 :another-item 70}
-  ;
-  ; @return (map)
-  [db [_ & item-paths]]
-  (letfn [(f0 [db item-path] (update-in db item-path inc))]
-         (reduce f0 db item-paths)))
-
-(defn dec-item!
-  ; @description
-  ; Decreases the value at the given 'item-path' by one.
-  ;
-  ; @param (vector) item-path
-  ;
-  ; @usage
-  ;
-  ; @example
-  ; (def db {:my-item 42})
-  ; (r inc-item! db [:my-item])
-  ; =>
-  ; {:my-item 41}
-  ;
-  ; @return (map)
-  [db [_ item-path]]
-  (update-in db item-path dec))
-
-(defn dec-item-n!
-  ; @description
-  ; Decreases the values at the given 'item-paths' by one.
-  ;
-  ; @param (vectors in vector) item-paths
-  ;
-  ; @usage
-  ; (r dec-item-n! db [[:my-item] [:another-item]])
-  ;
-  ; @example
-  ; (def db {:my-item 42 :another-item 69})
-  ; (r dec-item-n! db [[:my-item] [:another-item]])
-  ; =>
-  ; {:my-item 41 :another-item 68}
-  ;
-  ; @return (map)
-  [db [_ & item-paths]]
-  (letfn [(f0 [db item-path] (update-in db item-path dec))]
-         (reduce f0 db item-paths)))
-
-(defn apply-item!
-  ; @description
-  ; Applies the given 'f' function on the given 'item-path'.
-  ;
-  ; @param (vector) item-path
-  ; @param (function) f
-  ; @param (list of *) params
-  ;
-  ; @usage
-  ; (r apply-item! db [:my-item] not)
+  ; (update-item! db [:my-handler [:my-item] not])
   ;
   ; @example
   ; (def db {:my-item false})
-  ; (r apply-item! db [:my-item] not)
+  ; (update-item! db [:my-handler [:my-item] not])
   ; =>
   ; {:my-item true}
   ;
   ; @example
   ; (def db {:my-item [:pear]})
-  ; (r apply-item! db [:my-item] conj :apple)
+  ; (update-item! db [:my-handler [:my-item] conj :apple])
   ; =>
   ; {:my-item [:pear :apple]}
   ;
+  ; @usage
+  ; (dispatch [:update-item! [:my-item] conj :apple])
+  ;
   ; @return (map)
   [db [_ item-path f & params]]
-  (let [item   (get-in db item-path)
-        params (cons item params)]
-       (assoc-in db item-path (apply f params))))
+  (if (utils/vector-item-path? item-path)
+      (let [parent-path (utils/parent-path     item-path)
+            item-dex    (utils/vector-item-dex item-path)]
+           (apply update-in db parent-path vector/update-nth-item item-dex f params))
+      (apply update-in db item-path f params)))
+
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+
+(defn toggle-item!
+  ; @description
+  ; Converts the value of a specific item in the db to a boolean and toggles it (true > false, false > true).
+  ;
+  ; @param (map) db
+  ; @param (vector) handler-vector
+  ; [(keyword) handler-id
+  ;  (vector) item-path]
+  ;
+  ; @usage
+  ; (def db {:my-item false})
+  ; (toggle-item! db [:my-handler [:my-item]])
+  ; =>
+  ; {:my-item true}
+  ;
+  ; @usage
+  ; (def db {})
+  ; (toggle-item! db [:my-handler [:my-item]])
+  ; =>
+  ; {:my-item true}
+  ;
+  ; @usage
+  ; (def db {:my-item [false]})
+  ; (toggle-item! db [:my-handler [:my-item 0]])
+  ; =>
+  ; {:my-item [true]}
+  ;
+  ; @usage
+  ; (dispatch [:toggle-item! [:my-item]])
+  ;
+  ; @return (map)
+  [db [handler-id item-path]]
+  (update-item! db [handler-id item-path not]))
+
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+
+(defn copy-item!
+  ; @description
+  ; Duplicates a specific item in the db to the given copy path.
+  ;
+  ; @param (map) db
+  ; @param (vector) handler-vector
+  ; [(keyword) handler-id
+  ;  (vector) item-path
+  ;  (vector) copy-path]
+  ;
+  ; @usage
+  ; (def db {:my-item "My value"})
+  ; (copy-item! db [:my-handler [:my-item] [:copy-item]])
+  ; =>
+  ; {:my-item   "My value"
+  ;  :copy-item "My value"}
+  ;
+  ; @usage
+  ; (dispatch [:copy-item! [:my-item] [:copy-item]])
+  ;
+  ; @return (map)
+  [db [handler-id item-path copy-path]]
+  (let [item-value (get-in db item-path)]
+       (set-item! db [handler-id copy-path item-value])))
+
+(defn move-item!
+  ; @description
+  ; Moves a specific item in the db to the given destination path.
+  ;
+  ; @param (map) db
+  ; @param (vector) handler-vector
+  ; [(keyword) handler-id
+  ;  (vector) item-path
+  ;  (vector) destination-path]
+  ;
+  ; @usage
+  ; (def db {:my-item "My value"})
+  ; (move-item! db [:my-handler [:my-item] [:another-item]])
+  ; =>
+  ; {:another-item "My value"}
+  ;
+  ; @usage
+  ; (dispatch [:move-item! [:my-item] [:another-item]])
+  ;
+  ; @return (map)
+  [db [handler-id item-path destination-path]]
+  (let [item-value (get-in db item-path)]
+       (-> db (remove-item! [handler-id item-path])
+              (set-item!    [handler-id destination-path item-value]))))
+
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+
+(defn inc-item!
+  ; @description
+  ; Increases the value of a specific item in the db.
+  ;
+  ; @param (map) db
+  ; @param (vector) handler-vector
+  ; [(keyword) handler-id
+  ;  (vector) item-path]
+  ;
+  ; @usage
+  ; (def db {:my-item 42})
+  ; (inc-item! db [:my-handler [:my-item]])
+  ; =>
+  ; {:my-item 43}
+  ;
+  ; @usage
+  ; (dispatch [:inc-item! [:my-item]])
+  ;
+  ; @return (map)
+  [db [handler-id item-path]]
+  (update-item! db [handler-id item-path inc]))
+
+(defn dec-item!
+  ; @description
+  ; Decreases the value of a specific item in the db.
+  ;
+  ; @param (map) db
+  ; @param (vector) handler-vector
+  ; [(keyword) handler-id
+  ;  (vector) item-path]
+  ;
+  ; @usage
+  ; (def db {:my-item 42})
+  ; (inc-item! db [:my-handler [:my-item]])
+  ; =>
+  ; {:my-item 41}
+  ;
+  ; @usage
+  ; (dispatch [:dec-item! [:my-item]])
+  ;
+  ; @return (map)
+  [db [handler-id item-path]]
+  (update-item! db [handler-id item-path dec]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -381,57 +287,33 @@
 (reg-event-db :empty-db! empty-db!)
 
 ; @usage
-; [:toggle-item! [:my-item]]
-(reg-event-db :toggle-item! toggle-item!)
-
-; @usage
-; [:toggle-item-value! [:my-item] :my-value]
-(reg-event-db :toggle-item-value! toggle-item-value!)
-
-; @usage
-; [:move-item! [:copy-from] [:copy-to]]
-(reg-event-db :copy-item! copy-item!)
-
-; @usage
-; [:move-item! [:move-from] [:move-to]]
-(reg-event-db :move-item! move-item!)
-
-; @usage
 ; [:set-item! [:my-item] "My value"]
 (reg-event-db :set-item! set-item!)
-
-; @usage
-; [:set-vector-item! [:my-item :0] "My value"]
-(reg-event-db :set-vector-item! set-vector-item!)
 
 ; @usage
 ; [:remove-item! [:my-item]]
 (reg-event-db :remove-item! remove-item!)
 
 ; @usage
-; [:remove-item-n! [[:my-item ] [:another-item]]]
-(reg-event-db :remove-item-n! remove-item-n!)
+; [:update-item! [:my-item] conj :apple]
+(reg-event-db :update-item! update-item!)
 
 ; @usage
-; [:remove-vector-item! [:my-item 0]]
-(reg-event-db :remove-vector-item! remove-vector-item!)
+; [:toggle-item! [:my-item]]
+(reg-event-db :toggle-item! toggle-item!)
 
 ; @usage
-; [:inc-item! [:my-item]
+; [:move-item! [:my-item] [:copy-item]]
+(reg-event-db :copy-item! copy-item!)
+
+; @usage
+; [:move-item! [:my-item] [:another-item]]
+(reg-event-db :move-item! move-item!)
+
+; @usage
+; [:inc-item! [:my-item]]
 (reg-event-db :inc-item! inc-item!)
 
 ; @usage
-; [:inc-item-n! [[:my-item] [:another-item]]]
-(reg-event-db :inc-item-n! inc-item-n!)
-
-; @usage
-; [:dec-item! [:my-item]
+; [:dec-item! [:my-item]]
 (reg-event-db :dec-item! dec-item!)
-
-; @usage
-; [:dec-item-n! [[:my-item] [:another-item]]]
-(reg-event-db :dec-item-n! dec-item-n!)
-
-; @usage
-; [:apply-item! [:my-item] merge {}]
-(reg-event-db :apply-item! apply-item!)

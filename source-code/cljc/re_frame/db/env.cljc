@@ -6,11 +6,16 @@
 ;; ----------------------------------------------------------------------------
 
 (defn subscribe-item
+  ; @description
+  ; Returns an atom that can be deref'ed to the actual value of a specific item from the db.
+  ;
   ; @param (vector) item-path
   ; @param (*)(opt) default-value
   ;
   ; @usage
-  ; (subscribe-item [:my-item])
+  ; (deref (subscribe-item [:my-item]))
+  ; =>
+  ; "My value"
   ;
   ; @return (atom)
   ([item-path]
@@ -21,13 +26,15 @@
 
 (defn subscribed-item
   ; @description
-  ; Returns the actual deref'ed value of a db item.
+  ; Returns the actual deref'ed value of a specific item from the db.
   ;
   ; @param (vector) item-path
   ; @param (*)(opt) default-value
   ;
   ; @usage
   ; (subscribed-item [:my-item])
+  ; =>
+  ; "My value"
   ;
   ; @return (*)
   ([item-path]
