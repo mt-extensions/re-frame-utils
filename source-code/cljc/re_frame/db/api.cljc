@@ -3,7 +3,7 @@
     (:require [re-frame.db.env    :as env]
               [re-frame.db.events :as events]
               [re-frame.db.subs   :as subs]
-              [re-frame.db.utils :as utils]))
+              [re-frame.db.utils  :as utils]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
