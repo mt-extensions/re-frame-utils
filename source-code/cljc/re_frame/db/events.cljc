@@ -147,7 +147,7 @@
 
 (defn toggle-item!
   ; @description
-  ; Converts the value of a specific item in the db to a boolean and toggles it (true > false, false > true).
+  ; Converts the value of a specific item in the db into boolean and toggles it (true > false, false > true).
   ;
   ; @param (map) db
   ; @param (vector) handler-vector
