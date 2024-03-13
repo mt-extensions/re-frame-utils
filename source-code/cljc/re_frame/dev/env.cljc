@@ -7,7 +7,7 @@
 
 (defn get-event-handlers
   ; @description
-  ; Returns the registered event handlers optionally filtered by the given 'event-kind' value.
+  ; Returns the registered event handlers optionally filtered to a specific type of events.
   ;
   ; @param (keyword)(opt) event-kind
   ; :cofx, :event, :fx, :sub
@@ -35,7 +35,7 @@
 
 (defn get-event-handler
   ; @description
-  ; Returns a registered event handler found by the given 'event-kind' and 'event-id' values.
+  ; Returns a specific event handler.
   ;
   ; @param (keyword) event-kind
   ; :cofx, :event, :fx, :sub
@@ -53,7 +53,7 @@
 
 (defn event-handler-registered?
   ; @description
-  ; Returns TRUE if a registered event handler is found by the given 'event-kind' and 'event-id' values.
+  ; Returns TRUE if a specific event handler is registered.
   ;
   ; @param (keyword) event-kind
   ; :cofx, :event, :fx, :sub

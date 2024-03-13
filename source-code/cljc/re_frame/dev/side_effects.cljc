@@ -7,12 +7,11 @@
 
 (defn set-debug-mode!
   ; @description
-  ; Turns the debug mode on.
+  ; Turns the debug mode on (prints the dispatched events to the console).
   ;
   ; @usage
   ; (set-debug-mode!)
   []
-  ; Turns the debug mode on. <- Okay, but what does it do?
   (reset! state/DEBUG-MODE? true))
 
 (defn quit-debug-mode!

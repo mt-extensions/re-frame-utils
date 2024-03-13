@@ -7,7 +7,7 @@
 
 (defn vector-item-path?
   ; @description
-  ; Returns TRUE if the last item of the given item path vector is an integer.
+  ; Returns TRUE if the given item path ends with an integer, indicating that it points to a vector item in the db.
   ;
   ; @param (vector) item-path
   ;

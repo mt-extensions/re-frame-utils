@@ -7,17 +7,17 @@
 
 (defn subscribe-item
   ; @description
-  ; Returns an atom that can be deref'ed to the actual value of a specific item from the db.
+  ; Returns a Reagent Reaction containing the value of a specific db item.
   ;
   ; @param (vector) item-path
   ; @param (*)(opt) default-value
   ;
   ; @usage
-  ; (deref (subscribe-item [:my-item]))
+  ; (subscribe-item [:my-item])
   ; =>
-  ; "My value"
+  ; #object[Reagent.ratom.Reaction]
   ;
-  ; @return (atom)
+  ; @return (Reagent Reaction object)
   ([item-path]
    (-> [:get-item item-path] subscribe))
 
@@ -26,7 +26,7 @@
 
 (defn subscribed-item
   ; @description
-  ; Returns the actual deref'ed value of a specific item from the db.
+  ; Returns the value of a specific db item.
   ;
   ; @param (vector) item-path
   ; @param (*)(opt) default-value
