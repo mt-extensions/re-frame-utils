@@ -1,17 +1,14 @@
 
-(ns re-frame.dev.subs
-    (:require [re-frame.core      :as core]
-              [re-frame.dev.state :as state]))
+(ns re-frame.debug.subs
+    (:require [re-frame.core :as core]
+              [common-state.api :as common-state]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
 (defn get-db-reset-count
-  ; @note
-  ; Only counts the db writes when this handler is subscribed!
-  ;
   ; @description
-  ; Returns the actual db write count.
+  ; Returns the write count of the db (occurred since this query was subscribed).
   ;
   ; @usage
   ; (get-db-reset-count db [:my-handler])
@@ -21,8 +18,8 @@
   ;
   ; @return (integer)
   [db _]
-  (-> state/DB-RESET-COUNT (swap! inc))
-  (-> state/DB-RESET-COUNT (deref)))
+  (common-state/update-state! :re-frame.debug :db-reset-count inc)
+  (common-state/get-state     :re-frame.debug :db-reset-count))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

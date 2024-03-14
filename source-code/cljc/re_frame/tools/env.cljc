@@ -1,5 +1,5 @@
 
-(ns re-frame.dev.env
+(ns re-frame.tools.env
     (:require [re-frame.registrar :as registrar]))
 
 ;; ----------------------------------------------------------------------------
