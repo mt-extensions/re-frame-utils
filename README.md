@@ -17,10 +17,10 @@ and developer tools for the Re-Frame Clojure/ClojureScript framework.
 
 Check out the latest commit on the [release branch](https://github.com/mt-extensions/re-frame-utils/tree/release).
 
-### Documentation
-
-The <strong>re-frame-utils</strong> functional documentation is [available here](https://mt-extensions.github.io/re-frame-utils).
-
 ### Changelog
 
 You can track the changes of the <strong>re-frame-utils</strong> library [here](CHANGES.md).
+
+# Documentation
+
+The <strong>re-frame-utils</strong> functional documentation is [available here](https://mt-extensions.github.io/re-frame-utils).
