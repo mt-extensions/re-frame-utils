@@ -3,8 +3,7 @@
 
 ### Overview
 
-The <strong>re-frame-utils</strong> is a set of Re-Frame event and subscription functions;
-and developer tools for the Re-Frame Clojure/ClojureScript framework.
+The <strong>re-frame-utils</strong> is a set of event and subscription functions; and developer tools for the [day8 / re-frame] Clojure library.
 
 ### deps.edn
 
