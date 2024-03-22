@@ -1,10 +1,10 @@
 
 (ns re-frame.debug.api
     (:require [re-frame.debug.env          :as env]
+              [re-frame.debug.import       :as import]
               [re-frame.debug.interceptors :as interceptors]
               [re-frame.debug.side-effects :as side-effects]
-              [re-frame.debug.subs         :as subs]
-              [re-frame.debug.import :as import]))
+              [re-frame.debug.subs         :as subs]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 
 (ns re-frame.debug.import
-    (:require [fruits.vector.api :as vector]
-              [re-frame.debug.env :as env]
+    (:require [fruits.vector.api           :as vector]
+              [re-frame.debug.env          :as env]
               [re-frame.debug.interceptors :as interceptors]))
 
 ;; ----------------------------------------------------------------------------

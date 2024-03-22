@@ -1,8 +1,8 @@
 
 (ns re-frame.tools.utils
     (:require [fruits.map.api    :as map]
-              [fruits.vector.api :as vector]
-              [fruits.random.api :as random]))
+              [fruits.random.api :as random]
+              [fruits.vector.api :as vector]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 
 (ns re-frame.debug.subs
-    (:require [re-frame.core :as core]
-              [common-state.api :as common-state]))
+    (:require [common-state.api :as common-state]
+              [re-frame.core    :as core]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
