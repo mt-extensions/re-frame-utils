@@ -185,7 +185,7 @@
 
 (defn merge-effect-maps
   ; @description
-  ; Merges the the given effect maps.
+  ; Merges the given effect maps.
   ;
   ; @param (map) a
   ; @param (map) b
