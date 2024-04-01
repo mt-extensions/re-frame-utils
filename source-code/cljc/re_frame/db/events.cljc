@@ -237,7 +237,7 @@
 
 (defn inc-item!
   ; @description
-  ; Increases the value of a specific item in the db.
+  ; Increments the value of a specific item in the db.
   ;
   ; @param (map) db
   ; @param (vector) handler-vector
@@ -259,7 +259,7 @@
 
 (defn dec-item!
   ; @description
-  ; Decreases the value of a specific item in the db.
+  ; Decrements the value of a specific item in the db.
   ;
   ; @param (map) db
   ; @param (vector) handler-vector
